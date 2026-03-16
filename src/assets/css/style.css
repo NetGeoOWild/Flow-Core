@@ -1,0 +1,46 @@
+@import 'tailwindcss';
+
+body {
+  transition: all 0.3s ease;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 1230px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.completed-task {
+  color: #14b8a6;
+}
+
+.status-task-completed {
+  color: #14b8a6;
+}
+
+.status-task-notcompleted {
+  color: rgb(200, 40, 40);
+}
+
+.dark-task-table {
+  background-color: #2b2b2b;
+  border: none;
+  box-shadow: 0px 0px 15px 2px #138374;
+  color: #ffffff;
+}
+
+.dark-tasklist-created-at {
+  color: rgba(255, 255, 255, 0.94);
+  border-color: #ffffff;
+}
+
+.dark-donut-chart {
+  background-color: #222222;
+  border: none;
+}
+
+.dark-bar-chart {
+  background-color: #222222;
+  border: none;
+}
