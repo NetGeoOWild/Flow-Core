@@ -24,9 +24,3 @@ const isCollapsed = ref(true)
     </n-layout>
   </n-layout>
 </template>
-
-<style scoped>
-.sidebar-wrapper {
-  height: 100vh;
-}
-</style>
