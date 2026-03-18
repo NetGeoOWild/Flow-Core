@@ -8,13 +8,13 @@ const isCollapsed = ref(true)
 </script>
 
 <template>
-  <n-layout class="h-screen">
+  <n-layout>
     <n-layout-header class="header-container">
       <AppHeader />
     </n-layout-header>
 
     <n-layout has-sider class="sidebar-wrapper">
-      <BaseSidebar v-model:collapsed="isCollapsed" />
+      <BaseSidebar class="h-screen" v-model:collapsed="isCollapsed" />
 
       <n-layout-content class="content-wrapper">
         <div v-show="isCollapsed">

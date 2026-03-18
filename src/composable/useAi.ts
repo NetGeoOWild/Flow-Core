@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { GoogleGenAI, ThinkingLevel, ApiError } from '@google/genai'
+import { ApiError } from '@google/genai'
 
 export interface RoadmapItem {
   step: number
@@ -20,13 +20,9 @@ export type AiError = {
   isError: boolean
 }
 
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY
+const WORKER_URL = import.meta.env.VITE_CLOUD_FLARE_WORKER_URL
 
 export function useAi() {
-  const ai = new GoogleGenAI({
-    apiKey,
-  })
-
   const isLoading = ref<boolean>(false)
 
   const error = ref<AiError>({
@@ -52,37 +48,30 @@ export function useAi() {
     }
 
     try {
-      const response = await ai.models.generateContent({
-        model: 'gemini-3-flash-preview',
-        contents: [
-          {
-            role: 'user',
-            parts: [
-              {
-                text: `${prompt} + Return ONLY JSON. Use exact keys: title, prerequisites, roadmap (array of objects with step, name, topics), resources.`,
-              },
-            ],
-          },
-        ],
-        config: {
-          thinkingConfig: {
-            thinkingLevel: ThinkingLevel.MEDIUM,
-          },
-          responseMimeType: 'application/json',
-        },
+      const enhancedPrompt = `${prompt} + Return ONLY JSON. Use exact keys: title, prerequisites, roadmap (array of objects with step, name, topics), resources.`
+
+      const response = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: enhancedPrompt }),
       })
 
-      const text = response.text
+      const result = await response.json()
 
-      if (text) {
-        const data = JSON.parse(text) as RoadmapResponse
-        aiResponse.value = data
+      if (!response.ok) {
+        throw { status: response.status, message: result.error?.message || 'Unknown error' }
       }
 
-      return aiResponse.value
-    } catch (e) {
-      const apiError = 'Unknow Error: Try Again'
+      const text = result.candidates?.[0]?.content?.parts?.[0]?.text
 
+      if (text) {
+        const cleanText = text.replace(/```json\n?|\n?```/g, '').trim()
+        aiResponse.value = JSON.parse(cleanText) as RoadmapResponse
+        return aiResponse.value
+      }
+
+      throw new Error('No content in response')
+    } catch (e) {
       if (e instanceof ApiError) {
         error.value = {
           message: JSON.parse(e.message).error.message,

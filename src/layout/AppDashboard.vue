@@ -18,6 +18,7 @@ const filteredTasks = computed(() => {
 })
 
 const allInYear = computed(() => filteredTasks.value.length)
+
 const completedInYear = computed(
   () => filteredTasks.value.filter((t) => t.completed === true).length,
 )
@@ -41,9 +42,9 @@ const pendingInYear = computed(
           <BasePieChart
             :title="allInYear !== 0 ? 'Tasks Donut Chart' : 'No tasks found for year'"
             :year="currentYear"
-            :labels="['All', 'Completed', 'Pending']"
-            :series-data="[allInYear, completedInYear, pendingInYear]"
-            :colors="['#4F7479', '#14b8a6', '#C82828']"
+            :labels="['Completed', 'Pending']"
+            :series-data="[completedInYear, pendingInYear]"
+            :colors="['#14b8a6', '#C82828']"
           />
         </div>
         <div
