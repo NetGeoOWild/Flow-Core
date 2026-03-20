@@ -12,31 +12,7 @@ export const useTaskStore = defineStore(
   'task',
   () => {
     // sate
-    const tasks = ref<Tasks[]>([
-      {
-        // для живого примера
-        id: crypto.randomUUID(),
-        text: 'Покормить кота',
-        completed: false,
-        createdAt: new Date().toString(),
-      },
-
-      {
-        // для живого примера
-        id: crypto.randomUUID(),
-        text: 'Посмотреть мультфильм - Шрек',
-        completed: false,
-        createdAt: new Date().toString(),
-      },
-
-      {
-        // для живого примера
-        id: crypto.randomUUID(),
-        text: 'Сходить в спортинвый зал',
-        completed: false,
-        createdAt: new Date().toString(),
-      },
-    ])
+    const tasks = ref<Tasks[]>([])
     const currentFilter = ref<'all' | 'completed' | 'not-completed'>('all')
 
     const filteredTasks = computed(() => {
