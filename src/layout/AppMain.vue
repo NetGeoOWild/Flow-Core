@@ -13,7 +13,7 @@ const isCollapsed = ref(true)
       <AppHeader />
     </n-layout-header>
 
-    <n-layout has-sider class="sidebar-wrapper">
+    <n-layout has-sider class="sidebar-wrapper h-screen">
       <BaseSidebar class="h-screen" v-model:collapsed="isCollapsed" />
 
       <n-layout-content class="content-wrapper">
