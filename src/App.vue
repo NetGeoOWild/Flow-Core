@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { darkTheme, NConfigProvider, NGlobalStyle } from 'naive-ui'
 import { useTheme } from '@/composable/useTheme'
 import { useTaskStore } from './stores/taskStore'
@@ -7,16 +7,23 @@ import { lightThemeOverrides, darkThemeOverrides } from './configs/appConfig'
 import AppMain from './layout/AppMain.vue'
 
 const { isDark } = useTheme()
+const taskStore = useTaskStore()
 
 const currentOverrides = computed(() => {
   return isDark.value ? darkThemeOverrides : lightThemeOverrides
 })
 
 // Для примера что-бы список туду не был пустым
-const { addTask } = useTaskStore()
-addTask("Покормить кота")
-addTask("Посмотреть мультфильм Шрек")
-addTask("Сходить в спортивный зал")
+onMounted(() => {
+  // Проверяем наличие данных в localStorage
+  const storedTasks = localStorage.getItem('user-tasks')
+  
+  if (!storedTasks || JSON.parse(storedTasks).length === 0) {
+    taskStore.addTask("Покормить кота")
+    taskStore.addTask("Посмотреть мультфильм Шрек")
+    taskStore.addTask("Сходить в спортивный зал")
+  }
+})
 </script>
 
 <template>
